@@ -11,14 +11,17 @@ export const useThunk = <T, R>(
   const [error, setError] = useState<string | null>(null);
   const dispatch: AppDispatch = useAppDispatch();
 
-  const runThunk = (arg: T) => {
-    setIsLoading(true);
-    dispatch(thunk(arg))
-      //@ts-expect-error ts is not recognizing .unwrap() but its there from createAsyncThunk
-      .unwrap()
-      .catch((err: string) => setError(err))
-      .finally(() => setIsLoading(false));
-  };
+  const runThunk = useCallback(
+    (arg: T) => {
+      setIsLoading(true);
+      dispatch(thunk(arg))
+        //@ts-expect-error ts is not recognizing .unwrap() but its there from createAsyncThunk
+        .unwrap()
+        .catch((err: string) => setError(err))
+        .finally(() => setIsLoading(false));
+    },
+    [dispatch, thunk]
+  );
 
   return [runThunk, isLoading, error];
 };

@@ -1,27 +1,50 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
-import Input from '../../components/input';
-import { containsInvalidCharacters } from '../../helpers';
+import Input from '../../components/form/input';
+import { containsInvalidCharacters, isEmail } from '../../helpers';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import Button from '../../components/Button';
+import Button from '../../components/button';
+import zod from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+const formSchema = zod.object({
+  username: zod
+    .string()
+    .refine(
+      (value) =>
+        (containsInvalidCharacters(value) && !isEmail(value)) || isEmail(value),
+      'Input must be a valid username or email address'
+    ),
+  password: zod.string(),
+});
+
+type FormData = zod.infer<typeof formSchema>;
 
 const SignPage = () => {
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async ({ username, password }: FormData) => {
+    setLoading(true);
 
     // TODO: move logic to redux/thunk
-    if (containsInvalidCharacters(username)) {
+    if (isEmail(username)) {
       await signInWithEmailAndPassword(auth, username, password);
-
-      navigate('/');
+      setLoading(false);
     } else {
       const q = query(
         collection(db, 'users'),
@@ -31,6 +54,7 @@ const SignPage = () => {
 
       if (querySnapshot.empty) {
         alert(`no account with the username ${username} is found!`);
+        setLoading(false);
         return;
       }
 
@@ -38,7 +62,7 @@ const SignPage = () => {
 
       await signInWithEmailAndPassword(auth, foundUser.email, password);
 
-      navigate('/');
+      setLoading(false);
     }
   };
 
@@ -52,22 +76,30 @@ const SignPage = () => {
             location
           </p>
         </div>
-        <form className='grid grid-cols-4 gap-4' onSubmit={handleSubmit}>
+        <form
+          className='grid grid-cols-4 gap-4'
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Input
+            {...register('username')}
             label='Username or Email'
             type='text'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) =>
+              setValue('username', e.target.value, { shouldValidate: true })
+            }
+            error={errors.username?.message}
             required
           />
           <Input
+            {...register('password')}
             label='Password'
             type='password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            error={errors.password?.message}
             required
           />
-          <Button primary>Sign In</Button>
+          <Button primary disabled={loading}>
+            Sign In
+          </Button>
         </form>
         <div className='my-4'>
           <div className='flex items-center gap-2'>

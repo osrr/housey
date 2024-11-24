@@ -20,12 +20,14 @@ export const addUser = createAsyncThunk(
           photoURL: newUser.photoURL,
         });
 
-        setDoc(doc(db, 'users', snapshot.user.uid), {
+        await setDoc(doc(db, 'users', snapshot.user.uid), {
           id: snapshot.user.uid,
           email: snapshot.user.email,
           username: snapshot.user.displayName,
           photoURL: snapshot.user.photoURL,
-        });
+          phone: newUser.phone,
+          liked: newUser.liked,
+        }).then(() => {});
       }
     } catch (e) {
       console.log('THUNK_ADD_USER_ERROR', e);

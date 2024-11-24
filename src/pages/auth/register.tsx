@@ -1,50 +1,74 @@
-import { FormEvent, useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
-import Input from '../../components/input';
-import { containsInvalidCharacters } from '../../helpers';
+import Input from '../../components/form/input';
+import { containsInvalidCharacters, isEmail } from '../../helpers';
 import { useThunk } from '../../hooks/use-thunk';
 import { addUser } from '../../store';
 import { NewUser } from '../../../types';
-import Button from '../../components/Button';
+import Button from '../../components/button';
+import zod from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import PhoneInput from '../../components/form/phone-input';
+import MaskInput from '../../components/form/mask-input';
+
+const formSchema = zod
+  .object({
+    username: zod
+      .string()
+      .min(4, 'Username must be at least 4 letters')
+      .refine(
+        (value) => containsInvalidCharacters(value),
+        'Username cannot contain special characters'
+      ),
+    email: zod
+      .string()
+      .refine((value) => isEmail(value), 'Invalid email format'),
+    phone: zod.string().min(9, 'Phone number must be at least 9 numbers'),
+    password: zod.string().min(6, 'Password must be at least 6 characters'),
+    confirm: zod.string().min(1, 'Please confirm your password'),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords don't match",
+    path: ['confirm'],
+  });
+
+type FormData = zod.infer<typeof formSchema>;
 
 const RegisterPage = () => {
-  const [doAddUser, addUserLoading, addUserError] = useThunk(addUser);
+  const [doAddUser] = useThunk(addUser);
 
   const navigate = useNavigate();
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [vpassword, setVPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
 
-    if (containsInvalidCharacters(username)) {
-      alert('username cannot contain invalid characters');
-      return;
-    }
-
-    if (vpassword !== password) {
-      alert('passwords written are different!!');
-      return;
-    }
-
+  const onSubmit = (data: FormData) => {
+    setLoading(true);
     const newUser: NewUser = {
       id: '',
-      username,
-      email,
-      password,
+      username: data.username,
+      phone: `+971-${data.phone}`,
+      email: data.email,
+      password: data.password,
       photoURL: '',
-      posts: [],
+      liked: [],
     };
 
-    doAddUser(newUser);
+    console.log('creating new user', newUser);
 
-    navigate('/', {
-      replace: true,
-    });
+    doAddUser(newUser);
+    setLoading(false);
   };
 
   return (
@@ -55,37 +79,60 @@ const RegisterPage = () => {
           Join Housey, and find out the latest deals on houses in your location
         </p>
       </div>
-      <form className='grid grid-cols-4 gap-4' onSubmit={handleSubmit}>
+      <form
+        className='grid grid-cols-4 gap-4'
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <Input
+          {...register('username')}
           label='Username'
           type='name'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
+          error={errors.username?.message}
         />
         <Input
+          {...register('email')}
           label='Email'
-          type='email'
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
+          error={errors.email?.message}
         />
+        <div className='w-full col-span-full'>
+          <h1 className='text-sm font-semibold'>Phone</h1>
+          <div className='flex items-center'>
+            <div
+              className={`border rounded-l-md h-full py-1.5 px-2 bg-gray-200 ${
+                errors.phone ? 'border-red-500' : ''
+              }`}
+            >
+              <h1>+971</h1>
+            </div>
+            <MaskInput
+              mask='99-999-9999'
+              value={getValues('phone')}
+              onChange={(e) =>
+                setValue('phone', e.target.value, { shouldValidate: true })
+              }
+              className={`border-r border-t border-b py-1.5 px-2 w-full rounded-r-md ${
+                errors.phone ? 'border-red-500' : ''
+              }`}
+            />
+          </div>
+          {errors.phone && (
+            <p className='text-red-500 text-sm'>{errors.phone.message}</p>
+          )}
+        </div>
         <Input
+          {...register('password')}
           label='Password'
           type='password'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+          error={errors.password?.message}
         />
         <Input
+          {...register('confirm')}
           label='Verify Password'
           type='password'
-          value={vpassword}
-          onChange={(e) => setVPassword(e.target.value)}
-          required
+          error={errors.confirm?.message}
         />
         <div className='flex items-center gap-2 col-span-full'>
-          <input type='checkbox' required />
+          <input type='checkbox' />
           <p>
             I agree, to the{' '}
             <span className='text-primary font-bold hover:underline cursor-pointer'>
@@ -98,7 +145,9 @@ const RegisterPage = () => {
             !
           </p>
         </div>
-        <Button primary>Create Account</Button>
+        <Button primary disabled={loading}>
+          Create Account
+        </Button>
       </form>
       <div className='my-4'>
         <div className='flex items-center gap-2'>
@@ -106,6 +155,7 @@ const RegisterPage = () => {
           <button
             className='text-primary font-semibold'
             onClick={() => navigate('/auth/sign')}
+            disabled={loading}
           >
             Sign In
           </button>
@@ -119,10 +169,6 @@ const RegisterPage = () => {
         <Button icon={FcGoogle} className='mt-4' iconClassName='w-5 h-5'>
           Google
         </Button>
-      </div>
-
-      <div>
-        <h1>{addUserError}</h1>
       </div>
     </main>
   );

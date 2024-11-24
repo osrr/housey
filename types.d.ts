@@ -1,30 +1,50 @@
 export interface User {
   id: string;
   username: string;
+  phone: string;
   email: string;
   photoURL: string;
-  posts: Unit[];
+  liked: string[];
 }
 
 export interface NewUser extends User {
   password: string;
 }
 
+export type HouseType = 'Apartment' | 'Farmhouse' | 'House' | 'Skyscraper';
+
 export interface Unit {
   id: string;
-  userId: string;
-  label: string;
+  title: string;
   description: string;
+  type: HouseType;
+  phone: string;
   location: {
     city: string;
     address: string;
   };
-  info: {
-    beds: Feature;
-    baths: Feature;
-    square_foot: Feature;
-  };
+  beds: number;
+  baths: number;
+  sqft: number;
   images: UploadedFile[];
+  reviews: Review[];
+  user: {
+    userId: string;
+    username: string;
+    photoURL: string;
+    phone: string;
+  };
+}
+
+export interface Review {
+  id: string;
+  rate: number;
+  description: string;
+  user: {
+    userId: string;
+    username: string;
+    photoURL: string;
+  };
 }
 
 export interface Feature {

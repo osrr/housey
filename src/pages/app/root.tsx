@@ -1,15 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Button from '../../components/Button';
-import { FaUser } from 'react-icons/fa';
-
-const units = [
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-  { label: '4 bedroom Saada Tower', location: 'Sharjah, Al Khan' },
-];
+import UnitList from '../../components/unit-list';
 
 const Root = () => {
   const navigate = useNavigate();
@@ -22,16 +12,11 @@ const Root = () => {
           <button onClick={() => navigate('/units')}>view all</button>
         </div>
         <div className='flex items-center gap-3 overflow-x-scroll py-2'>
-          {units.map((unit, index) => {
-            return <h1>hello</h1>;
-          })}
+          <UnitList />
         </div>
       </section>
       <section>
         <h1 className='text-2xl font-semibold'>Recommended for you</h1>
-        <Button primary outline icon={FaUser}>
-          Submit
-        </Button>
       </section>
     </main>
   );

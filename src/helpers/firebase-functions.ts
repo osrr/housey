@@ -1,6 +1,7 @@
 import { UploadedFile, User } from '../../types';
 import {
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
@@ -19,7 +20,7 @@ export const firebaseFetchUsers = async () => {
   return users;
 };
 
-export const firebaseFetchUserById = async (userId: string) => {
+export const firebaseFetchUserById = async ({ userId }: { userId: string }) => {
   const querySnapshot = await getDoc(doc(db, 'users', userId));
 
   return { ...querySnapshot.data() } as User;
@@ -36,6 +37,9 @@ export const firebaseFetchDoc = async (path: string, docId: string) =>
 
 export const firebaseFetchDocs = async (path: string) =>
   await getDocs(collection(db, path));
+
+export const firebaseDeleteDoc = async (path: string, docId: string) =>
+  await deleteDoc(doc(db, path, docId));
 
 export const firebaseUploadPhotoAndGetURL = async (
   folderPath: string,
@@ -54,7 +58,7 @@ export const firebaseUploadPhotoAndGetURL = async (
 
 export const firebaseUploadFiles = async (
   path: string,
-  files: FileList
+  files: FileList | File[]
 ): Promise<UploadedFile[]> => {
   const uploadedFiles: UploadedFile[] = [];
 

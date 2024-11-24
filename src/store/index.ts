@@ -19,7 +19,9 @@ export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
 export const useAppSelector = useSelector.withTypes<RootState>();
 
 export { setUser, flushUser } from './slices/authSlice';
+export { selectPost } from './slices/postsSlice';
 
+export { selectUser } from './slices/usersSlice';
 export * from './thunks/users/fetchUsers';
 export * from './thunks/users/addUser';
 

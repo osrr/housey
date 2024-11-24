@@ -4,20 +4,9 @@ import { HiMenu } from 'react-icons/hi';
 import MobileNavLink from './mobile-nav-link';
 import { linkType } from './navbar';
 import { IoClose } from 'react-icons/io5';
-import { FaSignOutAlt, FaUser } from 'react-icons/fa';
-import { useAuth } from '../../hooks/use-auth';
-import { Link } from 'react-router-dom';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebase/config';
 
 const MobileNav = ({ links }: { links: linkType[] }) => {
-  const { currentUser, isAuthorized } = useAuth();
-
   const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    signOut(auth);
-  };
 
   return (
     <>
@@ -62,34 +51,6 @@ const MobileNav = ({ links }: { links: linkType[] }) => {
                   </MobileNavLink>
                 );
               })}
-            </motion.div>
-            {/* user */}
-            <motion.div className='absolute bottom-20 left-24 flex items-center gap-4 cursor-pointer'>
-              {isAuthorized ? (
-                <>
-                  <div className='w-10 h-10 p-2 flex items-center justify-center border rounded-full'>
-                    <FaUser />
-                  </div>
-                  <Link
-                    to={`profile/${currentUser.id}`}
-                    className='text-lg font-bold'
-                  >
-                    {currentUser.username}
-                  </Link>
-                  <button onClick={handleClick}>
-                    <FaSignOutAlt className='w-5 h-5 text-red-500' />
-                  </button>
-                </>
-              ) : (
-                <div className='w-full'>
-                  <Link
-                    to={'/auth/sign'}
-                    className='w-full bg-primary rounded-md py-2 px-4 text-white border border-primary hover:text-primary hover:bg-transparent transition duration-300'
-                  >
-                    Sign In
-                  </Link>
-                </div>
-              )}
             </motion.div>
           </motion.div>
         )}

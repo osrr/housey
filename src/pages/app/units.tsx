@@ -1,5 +1,11 @@
+import UnitList from '../../components/unit-list';
+
 const UnitsPage = () => {
-  return <div>UnitsPage</div>;
+  return (
+    <div>
+      <UnitList sm />
+    </div>
+  );
 };
 
 export default UnitsPage;

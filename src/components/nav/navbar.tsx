@@ -1,9 +1,16 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MobileNav from './mobile-nav';
-import { FaBell, FaPlus } from 'react-icons/fa';
+import { FaBell, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import NavSearch from './nav-search';
-import { useAuth } from '../../hooks/use-auth';
-import Button from '../Button';
+import Button from '../button';
+import { flushUser, useAppDispatch, useAppSelector } from '../../store';
+import {
+  DropdownAction,
+  DropdownLabel,
+  DropdownMenu,
+  DropdownSeparator,
+  DropdownShelf,
+} from '../dropdown-menu';
 
 export type linkType = { to: string; label: string };
 
@@ -19,9 +26,15 @@ interface NavbarProps {
 }
 
 const Navbar = ({ search }: NavbarProps) => {
-  const { currentUser } = useAuth();
+  const { currentUser } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const dispatch = useAppDispatch();
+
+  const handleClick = () => {
+    dispatch(flushUser(null));
+  };
 
   return (
     <div className='mt-[10px]'>
@@ -42,7 +55,7 @@ const Navbar = ({ search }: NavbarProps) => {
         {/* user actions */}
         <div className='flex items-center gap-4'>
           <div>
-            <p>John doe</p>
+            <p>{currentUser.username}</p>
           </div>
           <button className=''>
             <FaBell className='w-5 h-5' />
@@ -65,9 +78,41 @@ const Navbar = ({ search }: NavbarProps) => {
                 new post
               </Button>
             )}
-            <button className=''>
-              <FaBell className='w-5 h-5' />
-            </button>
+            <DropdownMenu
+              trigger={
+                <div>
+                  <div className='border rounded-full w-10 h-10 flex items-center justify-center'>
+                    {currentUser.photoURL ? (
+                      <img
+                        src={currentUser.photoURL}
+                        className='w-full h-full object-cover'
+                      />
+                    ) : (
+                      <FaUser />
+                    )}
+                  </div>
+                </div>
+              }
+              className='left-[-145px] right-0'
+            >
+              <DropdownLabel>{currentUser.username}</DropdownLabel>
+              <DropdownShelf>
+                <DropdownAction
+                  onClick={() => navigate(`/profile/${currentUser.id}`)}
+                  icon={FaUser}
+                >
+                  Profile
+                </DropdownAction>
+                <DropdownSeparator />
+                <DropdownAction
+                  onClick={() => handleClick()}
+                  className='text-red-500'
+                  icon={FaSignOutAlt}
+                >
+                  Log out
+                </DropdownAction>
+              </DropdownShelf>
+            </DropdownMenu>
           </div>
         </div>
         {search && <NavSearch />}

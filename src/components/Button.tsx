@@ -24,6 +24,7 @@ const Button = ({
   icon: Icon,
   sm,
   xs,
+  disabled,
   ...rest
 }: ButtonProps) => {
   return (
@@ -40,6 +41,10 @@ const Button = ({
           'flex items-center justify-center': hideLabel && Icon,
           'text-sm font-medium': sm && !xs,
           'text-xs font-normal': xs,
+          'bg-gray-200/80 border-gray-200/40 cursor-not-allowed hover:bg-gray-200/80 hover:border-gray-200/40 text-gray-800/40 hover:text-gray-800/40':
+            disabled && primary,
+          ' border-gray-200/40 cursor-not-allowed hover:bg-transparent hover:border-gray-200/40 text-gray-800/40 hover:text-gray-800/40':
+            disabled && outline,
         }
       )}
       {...rest}

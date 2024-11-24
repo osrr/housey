@@ -14,10 +14,10 @@ import SignPage from './pages/auth/sign';
 import RegisterPage from './pages/auth/register';
 import AuthIndex from './pages/auth';
 import AppIndex from './pages/app';
-import { AuthProvider } from './context/auth-context';
 import ProfilePage from './pages/profile/profile';
 import ProfileNewPostPage from './pages/profile/new-post';
 import ProfileIndex from './pages/profile';
+import ProfileEditPostPage from './pages/profile/edit-post';
 
 const router = createBrowserRouter([
   {
@@ -41,8 +41,14 @@ const router = createBrowserRouter([
         path: 'units',
         element: <UnitsPage />,
       },
+    ],
+  },
+  {
+    path: 'unit',
+    errorElement: <ErrorPage />,
+    children: [
       {
-        path: 'unit/:id',
+        path: ':id',
         element: <Unit />,
       },
     ],
@@ -59,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: 'new-post/:id',
         element: <ProfileNewPostPage />,
+      },
+      {
+        path: 'edit-post/:id',
+        element: <ProfileEditPostPage />,
       },
     ],
   },
@@ -82,9 +92,7 @@ const router = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <RouterProvider router={router} />
     </Provider>
   </StrictMode>
 );

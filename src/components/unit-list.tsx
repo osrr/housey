@@ -1,27 +1,42 @@
-import { useEffect } from 'react';
-import { fetchPosts, useAppDispatch, useAppSelector } from '../store';
 import Listing from './listing';
-import cn from 'classnames';
+import { Unit } from '../../types';
 
 interface UnitListProps {
-  sm?: boolean;
+  ascending?: boolean;
+  posts: Unit[];
 }
 
-const UnitList = ({ sm }: UnitListProps) => {
-  const dispatch = useAppDispatch();
-  const posts = useAppSelector((state) => state.posts.data);
+const UnitList = ({ posts, ascending }: UnitListProps) => {
+  if (ascending) {
+    const sortedPosts = [...posts].sort((a, b) => {
+      const d1 = new Date(a.createdAt);
+      const d2 = new Date(b.createdAt);
+      return d2.getTime() - d1.getTime();
+    });
 
-  useEffect(() => {
-    dispatch(fetchPosts());
-    console.log('is it fetching?', posts);
-  }, []);
+    return (
+      <>
+        {posts.length > 0 ? (
+          sortedPosts.map((post) => {
+            return <Listing key={post.id} post={post} />;
+          })
+        ) : (
+          <h1 className='text-xl text-zinc-400 font-bold'>No posts found</h1>
+        )}
+      </>
+    );
+  }
 
   return (
-    <div className={cn({ 'grid grid-cols-2 gap-2': sm })}>
-      {posts.map((post) => {
-        return <Listing key={post.id} post={post} user={post.user} />;
-      })}
-    </div>
+    <>
+      {posts.length > 0 ? (
+        posts.map((post) => {
+          return <Listing key={post.id} post={post} />;
+        })
+      ) : (
+        <h1 className='text-xl text-zinc-400 font-bold'>No posts found</h1>
+      )}
+    </>
   );
 };
 

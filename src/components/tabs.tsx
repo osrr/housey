@@ -15,7 +15,7 @@ const Tabs = <T,>({ tabs }: TabsProps<T>) => {
 
   return (
     <div className='w-full'>
-      <div className='bg-gray-200 p-1 rounded-md border'>
+      <div className='bg-gray-200 p-1 rounded-md border max-w-[600px] mx-auto'>
         <ul className='flex items-center justify-between w-full h-[24px]'>
           {tabs.map((item) => (
             <li

@@ -1,12 +1,18 @@
 import { UploadedFile, User } from '../../types';
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   deleteDoc,
   doc,
   DocumentData,
   getDoc,
   getDocs,
+  query,
   setDoc,
+  updateDoc,
+  where,
+  writeBatch,
 } from 'firebase/firestore';
 import { db, storage } from '../firebase/config';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
@@ -84,4 +90,75 @@ export const firebaseUploadFiles = async (
   }
 
   return uploadedFiles;
+};
+
+export const firebaseUpdateDoc = async <T extends object>(
+  path: string,
+  docId: string,
+  newData: T
+) => {
+  try {
+    const ref = doc(db, path, docId);
+
+    await updateDoc(ref, newData);
+  } catch (e) {
+    console.log('[UPDATE_DOC]', e);
+  }
+};
+
+export const handleUnlike = async (postId: string, userId: string) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+
+    // Remove the postId from the 'liked' array in Firestore
+    await updateDoc(userRef, {
+      liked: arrayRemove(postId),
+    });
+
+    console.log('User unliked a post!!');
+  } catch (error) {
+    console.error('Error unliking post:', error);
+  }
+};
+
+export const handleLike = async (postId: string, userId: string) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+
+    // Update the 'liked' array in Firestore using arrayUnion
+    await updateDoc(userRef, {
+      liked: arrayUnion(postId), // Adds the postId to the array if it doesn't already exist
+    });
+
+    console.log('User liked a post!!');
+  } catch (error) {
+    console.error('Error liking post:', error);
+  }
+};
+
+export const updateUserInfoInPosts = async (
+  userId: string,
+  updatedInfo: { username?: string; photoURL?: string; phone?: string }
+) => {
+  try {
+    const postsRef = collection(db, 'units');
+    const userPostsQuery = query(postsRef, where('user.userId', '==', userId));
+    const userPostsSnapshot = await getDocs(userPostsQuery);
+
+    const batch = writeBatch(db);
+
+    userPostsSnapshot.forEach((doc) => {
+      const postRef = doc.ref;
+      batch.update(postRef, {
+        'user.username': updatedInfo.username,
+        'user.photoURL': updatedInfo.photoURL,
+        'user.phone': updatedInfo.phone,
+      });
+    });
+
+    await batch.commit();
+    console.log('User info updated in all posts!');
+  } catch (e) {
+    console.error('Error updating posts:', e);
+  }
 };

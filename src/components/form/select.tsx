@@ -1,5 +1,5 @@
 import { forwardRef, SelectHTMLAttributes } from 'react';
-import cn from 'classnames';
+import { cn } from '../../helpers';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -34,11 +34,12 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
         <select
           ref={ref}
           className={cn(
-            `border rounded-md ${error ? 'border-red-500' : ''}`,
+            `border rounded-md w-full py-1.5 px-2 ${
+              error ? 'border-red-500' : ''
+            }`,
             className,
             {
               'p-1 text-xs font-semibold': sm,
-              'w-full py-1.5 px-2': !sm,
             }
           )}
           {...rest}

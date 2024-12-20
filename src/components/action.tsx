@@ -1,5 +1,5 @@
 import { IconType } from 'react-icons';
-import cn from 'classnames';
+import { cn } from '../helpers';
 
 interface ActionProps {
   label: string;

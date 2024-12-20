@@ -12,9 +12,7 @@ import {
   DropdownShelf,
 } from './dropdown-menu';
 import { MdEdit } from 'react-icons/md';
-import { firebaseDeleteDoc } from '../helpers';
-import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { firebaseDeleteDoc, handleLike, handleUnlike } from '../helpers';
 
 interface ListingProps {
   post: Unit;
@@ -30,44 +28,11 @@ const Listing = ({ post }: ListingProps) => {
   };
 
   const isLiked = (): boolean => {
-    console.log('currentUser:', currentUser);
-    console.log('currentUser.liked:', currentUser?.liked);
-    console.log('post.id:', post?.id);
-
     return (
       Array.isArray(currentUser?.liked) && currentUser.liked.includes(post.id)
     );
   };
 
-  const handleUnlike = async (postId: string) => {
-    try {
-      const userRef = doc(db, 'users', currentUser.id);
-
-      // Remove the postId from the 'liked' array in Firestore
-      await updateDoc(userRef, {
-        liked: arrayRemove(postId),
-      });
-
-      console.log('User unliked a post!!');
-    } catch (error) {
-      console.error('Error unliking post:', error);
-    }
-  };
-
-  const handleLike = async (postId: string) => {
-    try {
-      const userRef = doc(db, 'users', currentUser.id);
-
-      // Update the 'liked' array in Firestore using arrayUnion
-      await updateDoc(userRef, {
-        liked: arrayUnion(postId), // Adds the postId to the array if it doesn't already exist
-      });
-
-      console.log('User liked a post!!');
-    } catch (error) {
-      console.error('Error liking post:', error);
-    }
-  };
   const handleDelete = async (postId: string) => {
     await firebaseDeleteDoc('units', postId);
 
@@ -108,7 +73,9 @@ const Listing = ({ post }: ListingProps) => {
           <button
             className='absolute top-[10px] right-[10px] bg-white rounded-full p-2'
             onClick={() =>
-              isLiked() ? handleUnlike(post.id) : handleLike(post.id)
+              isLiked()
+                ? handleUnlike(post.id, currentUser.id)
+                : handleLike(post.id, currentUser.id)
             }
           >
             {isLiked() ? <FaHeart /> : <FaRegHeart />}
@@ -156,7 +123,10 @@ const Listing = ({ post }: ListingProps) => {
             <p className='text-gray-400 text-sm'>{post.sqft} Sqft</p>
           </div>
         </div>
-        <div className='flex items-center gap-2 cursor-pointer'>
+        <div
+          className='flex items-center gap-2 cursor-pointer'
+          onClick={() => navigate(`/profile/${post.user.userId}`)}
+        >
           <div className='border rounded-full w-8 h-8 flex items-center justify-center'>
             {post.user.photoURL ? (
               <img

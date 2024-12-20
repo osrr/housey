@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 type UseThunkReturn<T> = [(arg: T) => void, boolean, string | null];
 
 export const useThunk = <T, R>(
-  thunk: (arg: T) => ThunkAction<Promise<R>, any, unknown, UnknownAction>
+  thunk: (arg: T) => ThunkAction<Promise<R>, unknown, unknown, UnknownAction>
 ): UseThunkReturn<T> => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

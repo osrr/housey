@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
-import cn from 'classnames';
 import { IconType } from 'react-icons';
+import { cn } from '../helpers';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
@@ -30,7 +30,7 @@ const Button = ({
   return (
     <button
       className={cn(
-        `relative w-full col-span-full border font-semibold rounded-md py-1.5 px-2 transition duration-200
+        `relative w-full col-span-full  border font-semibold rounded-md py-1.5 px-2 transition duration-200
         `,
         className,
         {

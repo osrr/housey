@@ -1,16 +1,21 @@
 import { ChangeEvent, forwardRef } from 'react';
 import MaskInput from './mask-input';
+import { cn } from '../../helpers';
 
 interface PhoneInputProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  wrapperClassName?: string;
   error?: string;
 }
 
 const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
-  ({ error, value, onChange, ...rest }: PhoneInputProps, ref) => {
+  (
+    { error, value, onChange, wrapperClassName, ...rest }: PhoneInputProps,
+    ref
+  ) => {
     return (
-      <div className='w-full col-span-full'>
+      <div className={cn(`w-full col-span-full`, wrapperClassName)}>
         <h1 className='text-sm font-semibold'>Phone</h1>
         <div className='flex items-center'>
           <div

@@ -63,20 +63,12 @@ const ProfileEditPostPage = () => {
   const [loading, setLoading] = useState(false);
   const [showNumber, setShowNumber] = useState(false);
 
-  useEffect(() => {
-    if (params.id) {
-      console.log(params.id);
-      dispatch(fetchPostById(params.id));
-    }
-
-    console.log(selectedPost);
-  }, []);
-
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -85,6 +77,30 @@ const ProfileEditPostPage = () => {
     },
     resolver: zodResolver(formSchema),
   });
+
+  useEffect(() => {
+    if (params.id) {
+      console.log(params.id);
+      dispatch(fetchPostById(params.id));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedPost) {
+      reset({
+        title: selectedPost?.title || '',
+        description: selectedPost?.description || '',
+        type: selectedPost?.type || 'Apartment',
+        city: selectedPost?.location?.city || data.cities[0],
+        address: selectedPost?.location?.address || '',
+        beds: selectedPost?.beds || 0,
+        baths: selectedPost?.baths || 0,
+        sqft: selectedPost?.sqft || 0,
+        images: [],
+        phone: selectedPost?.phone || currentUser.phone,
+      });
+    }
+  }, [selectedPost, reset, data.cities, currentUser.phone]);
 
   const onSubmit = async (data: FormData) => {
     // e.preventDefault();
@@ -111,13 +127,14 @@ const ProfileEditPostPage = () => {
       baths: data.baths,
       sqft: data.sqft,
       images: uploadedImages,
-      reviews: [],
+      reviews: selectedPost.reviews,
       user: {
         userId: currentUser.id,
         username: currentUser.username,
         photoURL: currentUser.photoURL,
         phone: currentUser.phone,
       },
+      createdAt: selectedPost.createdAt,
     };
 
     // dispatch(addPost(newPost));
@@ -133,15 +150,15 @@ const ProfileEditPostPage = () => {
 
   if (selectedPost) {
     return (
-      <div className='mt-6'>
-        <h1 className='text-2xl font-bold'>Edit Unit</h1>
+      <div className='mt-6 w-full md:w-[60%] mx-auto'>
+        <h1 className='text-2xl font-bold'>New Unit</h1>
         <form
-          className='mt-6 grid grid-cols-4 gap-6'
+          className='mt-6 grid grid-cols-1 md:grid-cols-4 gap-6'
           onSubmit={handleSubmit(onSubmit)}
         >
           <ImageInput
             {...register('images')}
-            images={getValues('images') || []}
+            images={getValues('images') || selectedPost?.images}
             onChange={(e) => {
               const fileList = e.target.files;
 
@@ -159,35 +176,12 @@ const ProfileEditPostPage = () => {
               setValue('images', updatedImages, { shouldValidate: true });
             }}
             error={errors.images?.message}
+            multiple
           />
-          <Button
-            primary
-            outline
-            onClick={() => {
-              setShowNumber(!showNumber);
-              if (!showNumber) {
-                setValue('phone', '');
-              }
-            }}
-            type='button'
-          >
-            {!showNumber
-              ? 'Add Custom Phone Number'
-              : 'Use Account Phone Number'}
-          </Button>
-          {showNumber && (
-            <PhoneInput
-              {...register('phone')}
-              value={getValues('phone') || ''}
-              error={errors.phone?.message}
-              onChange={(e) =>
-                setValue('phone', e.target.value, { shouldValidate: true })
-              }
-            />
-          )}
           <Input
             {...register('title')}
             label='Title'
+            wrapperClassName='md:col-span-2'
             onChange={(e) => {
               setValue('title', e.target.value, { shouldValidate: true });
             }}
@@ -197,12 +191,14 @@ const ProfileEditPostPage = () => {
           <Textarea
             {...register('description')}
             label='Description'
+            className='h-[300px]'
             onChange={(e) =>
               setValue('description', e.target.value, { shouldValidate: true })
             }
             error={errors.description?.message}
           />
           <Select
+            wrapperClassName='md:col-span-2'
             {...register('type')}
             label='House Type'
             error={errors.type?.message}
@@ -219,6 +215,7 @@ const ProfileEditPostPage = () => {
           <Select
             {...register('city')}
             label='City'
+            wrapperClassName='md:col-span-2'
             error={errors.city?.message}
             options={data.cities.map((city) => ({ label: city, value: city }))}
             onChange={(e) =>
@@ -227,6 +224,7 @@ const ProfileEditPostPage = () => {
           />
           <Input
             label='Address'
+            wrapperClassName='md:col-span-2'
             {...register('address')}
             error={errors.address?.message}
             onChange={(e) =>
@@ -236,6 +234,7 @@ const ProfileEditPostPage = () => {
 
           <Input
             label='Beds'
+            wrapperClassName='md:col-span-2'
             {...register('beds', { valueAsNumber: true })}
             error={errors.beds?.message}
             onChange={(e) =>
@@ -248,6 +247,7 @@ const ProfileEditPostPage = () => {
           />
           <Input
             label='Baths'
+            wrapperClassName='md:col-span-2'
             {...register('baths', { valueAsNumber: true })}
             error={errors.baths?.message}
             onChange={(e) =>
@@ -260,6 +260,7 @@ const ProfileEditPostPage = () => {
           />
           <Input
             label='Square Foot'
+            wrapperClassName='md:col-span-2'
             {...register('sqft', { valueAsNumber: true })}
             error={errors.sqft?.message}
             onChange={(e) =>
@@ -270,7 +271,34 @@ const ProfileEditPostPage = () => {
             type='number'
             min={0}
           />
-
+          <div className='flex items-center gap-2 col-span-full md:col-span-2'>
+            <input
+              type='checkbox'
+              className='w-4 h-4'
+              onClick={() => {
+                setShowNumber(!showNumber);
+                if (!showNumber) {
+                  setValue('phone', '');
+                }
+              }}
+            />
+            <p className='text-sm'>
+              {!showNumber
+                ? 'Add Custom Phone Number'
+                : 'Use Account Phone Number'}
+            </p>
+          </div>
+          {showNumber && (
+            <PhoneInput
+              {...register('phone')}
+              wrapperClassName='md:col-span-2'
+              value={getValues('phone') || ''}
+              error={errors.phone?.message}
+              onChange={(e) =>
+                setValue('phone', e.target.value, { shouldValidate: true })
+              }
+            />
+          )}
           <Button type='submit' disabled={loading} primary>
             Add New Unit
           </Button>
@@ -281,3 +309,22 @@ const ProfileEditPostPage = () => {
 };
 
 export default ProfileEditPostPage;
+
+{
+  /* <Button
+              primary
+              outline
+              className='col-span-1'
+              onClick={() => {
+                setShowNumber(!showNumber);
+                if (!showNumber) {
+                  setValue('phone', '');
+                }
+              }}
+              type='button'
+            >
+              {!showNumber
+                ? 'Add Custom Phone Number'
+                : 'Use Account Phone Number'}
+            </Button> */
+}

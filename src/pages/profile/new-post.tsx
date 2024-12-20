@@ -77,6 +77,8 @@ const ProfileNewPostPage = () => {
 
   const onSubmit = async (data: FormData) => {
     // e.preventDefault();
+    console.log('clicked');
+
     setLoading(true);
     const uploadedImages = await firebaseUploadFiles('units', data.images);
 
@@ -107,6 +109,7 @@ const ProfileNewPostPage = () => {
         photoURL: currentUser.photoURL,
         phone: currentUser.phone,
       },
+      createdAt: new Date().toISOString(),
     };
 
     dispatch(addPost(newPost));
@@ -117,10 +120,10 @@ const ProfileNewPostPage = () => {
   };
 
   return (
-    <div className='mt-6'>
+    <div className='mt-6 w-full md:w-[60%] mx-auto'>
       <h1 className='text-2xl font-bold'>New Unit</h1>
       <form
-        className='mt-6 grid grid-cols-4 gap-6'
+        className='mt-6 grid grid-cols-1 md:grid-cols-4 gap-6'
         onSubmit={handleSubmit(onSubmit)}
       >
         <ImageInput
@@ -143,33 +146,12 @@ const ProfileNewPostPage = () => {
             setValue('images', updatedImages, { shouldValidate: true });
           }}
           error={errors.images?.message}
+          multiple
         />
-        <Button
-          primary
-          outline
-          onClick={() => {
-            setShowNumber(!showNumber);
-            if (!showNumber) {
-              setValue('phone', '');
-            }
-          }}
-          type='button'
-        >
-          {!showNumber ? 'Add Custom Phone Number' : 'Use Account Phone Number'}
-        </Button>
-        {showNumber && (
-          <PhoneInput
-            {...register('phone')}
-            value={getValues('phone') || ''}
-            error={errors.phone?.message}
-            onChange={(e) =>
-              setValue('phone', e.target.value, { shouldValidate: true })
-            }
-          />
-        )}
         <Input
           {...register('title')}
           label='Title'
+          wrapperClassName='md:col-span-2'
           onChange={(e) => {
             setValue('title', e.target.value, { shouldValidate: true });
           }}
@@ -179,12 +161,14 @@ const ProfileNewPostPage = () => {
         <Textarea
           {...register('description')}
           label='Description'
+          className='h-[300px]'
           onChange={(e) =>
             setValue('description', e.target.value, { shouldValidate: true })
           }
           error={errors.description?.message}
         />
         <Select
+          wrapperClassName='md:col-span-2'
           {...register('type')}
           label='House Type'
           error={errors.type?.message}
@@ -201,6 +185,7 @@ const ProfileNewPostPage = () => {
         <Select
           {...register('city')}
           label='City'
+          wrapperClassName='md:col-span-2'
           error={errors.city?.message}
           options={data.cities.map((city) => ({ label: city, value: city }))}
           onChange={(e) =>
@@ -209,6 +194,7 @@ const ProfileNewPostPage = () => {
         />
         <Input
           label='Address'
+          wrapperClassName='md:col-span-2'
           {...register('address')}
           error={errors.address?.message}
           onChange={(e) =>
@@ -218,6 +204,7 @@ const ProfileNewPostPage = () => {
 
         <Input
           label='Beds'
+          wrapperClassName='md:col-span-2'
           {...register('beds', { valueAsNumber: true })}
           error={errors.beds?.message}
           onChange={(e) =>
@@ -230,6 +217,7 @@ const ProfileNewPostPage = () => {
         />
         <Input
           label='Baths'
+          wrapperClassName='md:col-span-2'
           {...register('baths', { valueAsNumber: true })}
           error={errors.baths?.message}
           onChange={(e) =>
@@ -242,6 +230,7 @@ const ProfileNewPostPage = () => {
         />
         <Input
           label='Square Foot'
+          wrapperClassName='md:col-span-2'
           {...register('sqft', { valueAsNumber: true })}
           error={errors.sqft?.message}
           onChange={(e) =>
@@ -252,7 +241,35 @@ const ProfileNewPostPage = () => {
           type='number'
           min={0}
         />
-
+        <div className={'col-span-full grid grid-cols-3 gap-4'}>
+          <Button
+            primary
+            outline
+            className='col-span-1 my-auto'
+            onClick={() => {
+              setShowNumber(!showNumber);
+              if (!showNumber) {
+                setValue('phone', '');
+              }
+            }}
+            type='button'
+          >
+            {!showNumber
+              ? 'Add Custom Phone Number'
+              : 'Use Account Phone Number'}
+          </Button>
+          {showNumber && (
+            <PhoneInput
+              {...register('phone')}
+              wrapperClassName='md:col-span-2'
+              value={getValues('phone') || ''}
+              error={errors.phone?.message}
+              onChange={(e) =>
+                setValue('phone', e.target.value, { shouldValidate: true })
+              }
+            />
+          )}
+        </div>
         <Button type='submit' disabled={loading} primary>
           Add New Unit
         </Button>

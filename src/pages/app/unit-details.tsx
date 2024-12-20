@@ -2,6 +2,7 @@ import {
   FaChevronLeft,
   FaDirections,
   FaEnvelope,
+  FaHeart,
   FaPhone,
   FaRegHeart,
   FaShare,
@@ -14,7 +15,8 @@ import Tabs from '../../components/tabs';
 import { fetchPostById, useAppDispatch, useAppSelector } from '../../store';
 import { useEffect } from 'react';
 import { useThunk } from '../../hooks/use-thunk';
-import Select from '../../components/form/select';
+// import Select from '../../components/form/select';
+import { handleLike, handleUnlike } from '../../helpers';
 
 const Unit = () => {
   const params = useParams();
@@ -23,6 +25,7 @@ const Unit = () => {
     useThunk(fetchPostById);
 
   const { selectedPost } = useAppSelector((state) => state.posts);
+  const { currentUser } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -32,6 +35,13 @@ const Unit = () => {
       console.log(selectedPost);
     }
   }, [dispatch, params.id]);
+
+  const isLiked = (): boolean => {
+    return (
+      Array.isArray(currentUser?.liked) &&
+      currentUser.liked.includes(selectedPost.id)
+    );
+  };
 
   let content;
 
@@ -46,7 +56,7 @@ const Unit = () => {
   if (selectedPost) {
     content = (
       <>
-        <div className='relative h-[300px]'>
+        <div className='relative h-[300px] md:h-[600px] aspect-video mx-auto'>
           {selectedPost?.images && (
             <SlideShow slides={selectedPost?.images.map((image) => image)} />
           )}
@@ -89,10 +99,11 @@ const Unit = () => {
             />
           )}
         </div>
-        <div className='w-full'>
-          <div className='w-full flex items-center'>
-            <div className='text-xl font-semibold'>
+        {/* <div className='w-full'>
+          <div className='w-full flex items-center justify-between'>
+            <div className='flex items-center text-xl font-semibold'>
               <p>{selectedPost.reviews?.length}</p>
+              <span className='mx-2'>●</span>
               <h1>Reviews</h1>
             </div>
             <Select
@@ -101,11 +112,11 @@ const Unit = () => {
                 { label: 'Lowest-rated', value: 1 },
                 { label: 'Latest-ratings', value: 2 },
               ]}
-              className='ml-auto'
+              wrapperClassName='max-w-[400px]'
               sm
             />
           </div>
-        </div>
+        </div> */}
       </>
     );
   }
@@ -122,8 +133,14 @@ const Unit = () => {
         </button>
         <h1 className='text-2xl font-bold'>Details</h1>
         <div className='flex items-center gap-2'>
-          <button>
-            <FaRegHeart className='w-5 h-5' />
+          <button
+            onClick={() =>
+              isLiked()
+                ? handleUnlike(selectedPost.id, currentUser.id)
+                : handleLike(selectedPost.id, currentUser.id)
+            }
+          >
+            {isLiked() ? <FaHeart /> : <FaRegHeart />}
           </button>
           <button>
             <IoShareOutline className='w-5 h-5' />

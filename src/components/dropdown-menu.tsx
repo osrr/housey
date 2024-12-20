@@ -103,13 +103,13 @@ const DropdownMenuWrapped = ({
 
   return (
     <div className='relative' ref={divEl}>
-      <button
+      <div
         onClick={() => setOpen(!open)}
         className='flex items-center justify-start'
       >
         {trigger}
         {chevron}
-      </button>
+      </div>
       {open && (
         <div
           className={`absolute top-full border shadow bg-white rounded w-48 flex flex-col items-start z-30 ${className}`}

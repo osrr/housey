@@ -1,13 +1,20 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from '../../components/nav/navbar';
 import ProtectedRoute from '../protected-route';
+import Footer from '../../components/footer';
 
 const AppIndex = () => {
   return (
     <ProtectedRoute>
-      <div className='relative max-w-[90%] mx-auto md:max-w-[680px]'>
+      <div
+        id='index-container'
+        className='relative container mx-auto px-4 min-h-screen grid grid-cols-1'
+      >
         <Navbar search />
-        <Outlet />
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
       </div>
     </ProtectedRoute>
   );

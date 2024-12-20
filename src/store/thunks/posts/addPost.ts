@@ -9,7 +9,7 @@ export const addPost = createAsyncThunk('posts/add', async (newUnit: Unit) => {
     try {
       await setDoc(doc(db, 'units', newUnit.id), newUnit);
 
-      const userRef = doc(db, 'users', newUnit.userId);
+      const userRef = doc(db, 'users', newUnit.user.userId);
 
       const userSnap = await getDoc(userRef);
       const userData = userSnap.exists() ? userSnap.data() : {};

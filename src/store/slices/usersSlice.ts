@@ -25,7 +25,7 @@ const usersSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(fetchUsers.pending, (state, action) => {
+    builder.addCase(fetchUsers.pending, (state, _) => {
       state.isLoading = true;
       console.log('im loading');
     });
@@ -40,7 +40,7 @@ const usersSlice = createSlice({
       state.isLoading = false;
       state.error = action.error as SerializedError;
     });
-    builder.addCase(fetchUserById.pending, (state, action) => {
+    builder.addCase(fetchUserById.pending, (state, _) => {
       state.isLoading = true;
       console.log('im loading');
     });

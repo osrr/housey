@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, useState } from 'react';
+import { ChangeEvent, forwardRef } from 'react';
 
 interface MaskInputProps {
   mask: string;
@@ -13,7 +13,7 @@ const MaskInput = forwardRef<HTMLInputElement, MaskInputProps>(
     { mask, value, onChange, className, placeholder, ...rest }: MaskInputProps,
     ref
   ) => {
-    const [inputValue, setInputValue] = useState(value);
+    // const [inputValue, setInputValue] = useState(value);
 
     // Function to format the input based on the mask
     const applyMask = (rawValue: string) => {

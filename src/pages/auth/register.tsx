@@ -10,7 +10,6 @@ import zod from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import PhoneInput from '../../components/form/phone-input';
 import MaskInput from '../../components/form/mask-input';
 
 const formSchema = zod

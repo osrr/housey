@@ -14,6 +14,7 @@ const PhoneInput = forwardRef<HTMLInputElement, PhoneInputProps>(
     { error, value, onChange, wrapperClassName, ...rest }: PhoneInputProps,
     ref
   ) => {
+    console.log(ref);
     return (
       <div className={cn(`w-full col-span-full`, wrapperClassName)}>
         <h1 className='text-sm font-semibold'>Phone</h1>

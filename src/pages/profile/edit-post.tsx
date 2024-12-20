@@ -139,7 +139,8 @@ const ProfileEditPostPage = () => {
 
     // dispatch(addPost(newPost));
 
-    console.log('done');
+    newPost;
+    // console.log('done');
     setLoading(false);
     navigate('/units');
   };

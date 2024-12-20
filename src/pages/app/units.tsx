@@ -2,7 +2,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import Input from '../../components/form/input';
 import UnitList from '../../components/unit-list';
 import Select from '../../components/form/select';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import { FaRedo } from 'react-icons/fa';
 import { fetchPosts, useAppDispatch, useAppSelector } from '../../store';
 

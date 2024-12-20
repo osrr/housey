@@ -5,7 +5,7 @@ import { containsInvalidCharacters, isEmail } from '../../helpers';
 import { useThunk } from '../../hooks/use-thunk';
 import { addUser } from '../../store';
 import { NewUser } from '../../types';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import zod from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

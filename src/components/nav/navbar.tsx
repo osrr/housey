@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import MobileNav from './mobile-nav';
 import { FaSignOutAlt, FaUser } from 'react-icons/fa';
 import NavSearch from './nav-search';
-import Button from '../button';
+import Button from '../custom-button';
 import { flushUser, useAppDispatch, useAppSelector } from '../../store';
 import {
   DropdownAction,

@@ -8,7 +8,7 @@ import Select from '../../components/form/select';
 import data from '../../../data.json';
 import ImageInput from '../../components/form/image-input';
 import { firebaseUploadFiles } from '../../helpers';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

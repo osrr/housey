@@ -1,9 +1,9 @@
 import propertyImage from '../../public/hero-image.jpg';
 import { MdLocationPin } from 'react-icons/md';
-import Button from './button';
 import Select from './form/select';
 import { useNavigate } from 'react-router-dom';
 import { ChangeEvent, useState } from 'react';
+import Button from './custom-button';
 
 const Hero = () => {
   const navigate = useNavigate();

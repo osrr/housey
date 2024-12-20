@@ -2,7 +2,7 @@ import { FaEnvelope, FaPhone } from 'react-icons/fa';
 import { MdLocationPin } from 'react-icons/md';
 import Input from '../../components/form/input';
 import Textarea from '../../components/form/textarea';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 
 const ContactPage = () => {
   return (

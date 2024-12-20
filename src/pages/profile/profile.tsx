@@ -20,7 +20,7 @@ import { FaX } from 'react-icons/fa6';
 import ImageInput from '../../components/form/image-input';
 import Input from '../../components/form/input';
 import PhoneInput from '../../components/form/phone-input';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import {
   firebaseUpdateDoc,
   firebaseUploadPhotoAndGetURL,

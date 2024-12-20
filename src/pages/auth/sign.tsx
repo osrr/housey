@@ -6,7 +6,7 @@ import { containsInvalidCharacters, isEmail } from '../../helpers';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../../firebase/config';
 import { collection, getDocs, query, where } from 'firebase/firestore';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import zod from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { firebaseUploadFiles } from '../../helpers';
 import { HouseType, Unit } from '../../types';
 import ImageInput from '../../components/form/image-input';
-import Button from '../../components/button';
+import Button from '../../components/custom-button';
 import Input from '../../components/form/input';
 import PhoneInput from '../../components/form/phone-input';
 import Select from '../../components/form/select';

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../../types';
+import { User } from '../../types';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 

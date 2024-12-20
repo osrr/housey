@@ -1,5 +1,5 @@
 import Listing from './listing';
-import { Unit } from '../../types';
+import { Unit } from '../types';
 
 interface UnitListProps {
   ascending?: boolean;

@@ -26,7 +26,7 @@ import {
   firebaseUploadPhotoAndGetURL,
   updateUserInfoInPosts,
 } from '../../helpers';
-import { User } from '../../../types';
+import { User } from '../../types';
 import { updateProfile } from 'firebase/auth';
 import { auth } from '../../firebase/config';
 

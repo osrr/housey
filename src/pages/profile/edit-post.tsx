@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { firebaseUploadFiles } from '../../helpers';
-import { HouseType, Unit } from '../../../types';
+import { HouseType, Unit } from '../../types';
 import ImageInput from '../../components/form/image-input';
 import Button from '../../components/button';
 import Input from '../../components/form/input';

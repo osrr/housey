@@ -3,7 +3,7 @@ import { flushUser, setUser, useAppDispatch } from '../store';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from '../firebase/config';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../../types';
+import { User } from '../types';
 import { doc, onSnapshot } from 'firebase/firestore';
 
 const ProtectedRoute = ({ children }: { children: ReactNode }) => {

@@ -2,7 +2,7 @@ import { InputHTMLAttributes } from 'react';
 import { FaImage } from 'react-icons/fa';
 import { MdCloudUpload } from 'react-icons/md';
 import { cn } from '../../helpers';
-import { UploadedFile } from '../../../types';
+import { UploadedFile } from '../../types';
 
 interface ImageInputProps extends InputHTMLAttributes<HTMLInputElement> {
   images: File[] | UploadedFile[];

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Unit } from '../../../../types';
+import { Unit } from '../../../types';
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/config';
 import { measureExecutionTime } from '../../../helpers';

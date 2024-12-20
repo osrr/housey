@@ -4,7 +4,7 @@ import Input from '../../components/form/input';
 import { containsInvalidCharacters, isEmail } from '../../helpers';
 import { useThunk } from '../../hooks/use-thunk';
 import { addUser } from '../../store';
-import { NewUser } from '../../../types';
+import { NewUser } from '../../types';
 import Button from '../../components/button';
 import zod from 'zod';
 import { useForm } from 'react-hook-form';

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { firebaseFetchDoc, firebaseFetchDocs } from '../../../helpers';
-import { Unit } from '../../../../types';
+import { Unit } from '../../../types';
 
 export const fetchPosts = createAsyncThunk(
   'posts/fetch',

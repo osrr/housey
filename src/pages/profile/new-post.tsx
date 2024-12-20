@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Input from '../../components/form/input';
 import { addPost, useAppDispatch, useAppSelector } from '../../store';
-import { HouseType, Unit } from '../../../types';
+import { HouseType, Unit } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import Select from '../../components/form/select';

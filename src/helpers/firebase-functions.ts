@@ -1,4 +1,4 @@
-import { UploadedFile, User } from '../../types';
+import { UploadedFile, User } from '../types';
 import {
   arrayRemove,
   arrayUnion,

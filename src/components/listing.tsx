@@ -1,7 +1,7 @@
 import { FaBath, FaHeart, FaRegHeart, FaTrash, FaUser } from 'react-icons/fa';
 import { IoIosBed, IoIosMenu, IoMdPin } from 'react-icons/io';
 import { PiCheckerboardFill } from 'react-icons/pi';
-import { Unit } from '../../types';
+import { Unit } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../store';
 import {

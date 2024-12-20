@@ -1,5 +1,5 @@
 import { createSlice, SerializedError } from '@reduxjs/toolkit';
-import { Unit } from '../../../types';
+import { Unit } from '../../types';
 import { fetchPostById, fetchPosts } from '../thunks/posts/fetchPosts';
 
 export interface PostsState {

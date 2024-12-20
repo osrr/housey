@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UploadedFile } from '../../types';
+import { UploadedFile } from '../types';
 import { AnimatePresence, motion } from 'framer-motion';
 import { wrap } from 'popmotion';
 import { FaChevronLeft, FaChevronRight, FaImage } from 'react-icons/fa';

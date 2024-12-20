@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import { fetchUserById, fetchUsers } from '../thunks/users/fetchUsers';
-import { User } from '../../../types';
+import { User } from '../../types';
 
 export interface UsersState {
   data: User[];
